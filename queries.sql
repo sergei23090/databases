@@ -82,51 +82,7 @@ WHERE act.date_buy> now()-interval '28 days' and act.date_buy < now()-interval '
 
 ORDER BY pr.id
 
--- Седьмое задание
-with a as(select distinct pr.product_name_id,
 
-case
-when act.date_buy < now() and act.date_buy > (now()::date - integer '7')
-then (count(pr.*))
-else 0
-end as one,
-
-case
-when act.date_buy < now()::date - integer '7' and act.date_buy > now()::date - integer '14'
-then count(pr.*)
-else 0
-end as two,
-
-case
-when act.date_buy < now()::date - integer '14' and act.date_buy > now()::date - integer '21'
-then count(pr.*)
-else 0
-end as three,
-
-case
-when act.date_buy < now()::date - integer '21' and act.date_buy > now()::date - integer '28'
-then count(pr.*)
-else 0
-end as four
-
-from product_accounting pr, accounting act
-where act.id = pr.accounting_id
-group by pr.product_name_id, act.date_buy)
-
-
-select product_name_id, (one + two + three + four) as sum,
-pr.quantity_stock,
-
-case
-when (one + two + three + four) > pr.quantity_stock
-then (one + two + three + four) - pr.quantity_stock
-else 0
-end
-
-from a
-
-inner join product_name pr on a.product_name_id = pr.id
-group by product_name_id, sum, pr.quantity_stock
 
 -- Восьмое задание
 select emp.name, emp.surname, sched.start_work, sched.finish_work
@@ -196,22 +152,6 @@ select (funcOne.price_product-funcTwo.price_supplier)/funcTwo.price_supplier*100
 funcOne.price_product-funcTwo.price_supplier as absolute
 from funcOne, funcTwo
 where funcOne.id = funcTwo.id
-
---Четырнадцатое задание
-with clear_income as
-(with outcome as (select shs.id, shs.price::real as outcome
-from shop_supplier as shs),
-
-income as (select prs.id, prs.costs::real as income
-from product_shop as prs )
-
-select outcome.id outcome_id, income.id as income_id, income.income-outcome.outcome as clear_income, outcome.outcome
-from outcome, income
-where outcome.id = income.id), shop as(select sh.id as shop_id from shop as sh)
-
-select *
-from clear_income, shop
-where clear_income.income_id = shop.shop_id and clear_income.outcome_id = shop.shop_id
 
 -- Пятнадцатое задание
 ALTER TABLE employee ADD COLUMN salary integer ;
