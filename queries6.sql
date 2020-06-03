@@ -7,7 +7,7 @@ where city = 'Дубна'and date_creation > now()
 -- Второе задание
 select sched.start_work, sched.finish_work, sh.name
 from schedule_works as sched, shop as sh, employee_shop as emps
-where cast (sh.name AS varchar) like 'Оля' and sg.id = emps.shop_id and sched.start_work is not null
+where cast (sh.name AS varchar) like 'Оля' and sh.id = emps.shop_id and sched.start_work is not null
 
 -- Третье задание
 SELECT cl.id, cl.name, cl.surname, cl.middle_name, extract(month from age(act.date_buy)) as day
