@@ -20,10 +20,10 @@ WHERE pr.receipt >= 10000 and age(act.date_buy, '1999-01-01') > age(now(), '1999
 ORDER BY cl.id, cl.name, cl.surname, cl.middle_name, extract(month from age(act.date_buy))
 
 -- Четвертое задание
-with funcOne as(select act.id, sum(act.amount*ac.price) as buy,count(*)::real as tmp
+with funcOne as(select act.id, sum(act.amount*act.price) as buy,count(*)::real as tmp
 from accounting as act
 
-where(now()::date-ac.date_buy::date)*24<=240
+where(now()::date-act.date_buy::date)*24<=240
 Group By act.id ), funcTwo as(select count(*)::real as tmp1 from accounting as act)
 
 select funcOne.buy , client.name
@@ -41,7 +41,7 @@ FROM client as clt
 INNER JOIN product_accounting as pr ON clt.id=pr.client_id
 INNER JOIN accounting as act ON pr.accounting_id=act.id
 
-WHERE (now()::date-ac.date_buy::date)*24<=240
+WHERE (now()::date-act.date_buy::date)*24<=240
 
 GROUP BY clt.id, clt.name, clt.surname, clt.middle_name, pr.receipt
 having pr.receipt = MAX(pr.receipt)
@@ -86,8 +86,8 @@ ORDER BY pr.id
 
 -- Восьмое задание
 select emp.name, emp.surname, sched.start_work, sched.finish_work
-from employee as emp, schedule_works as sсhed
-where sched.id=emp.schedule_works_id and finish is not null
+from employee as emp, schedule_works as sched
+where sched.id=emp.schedule_works_id and sched.finish_work is not null
 
 --Девятое задание
 SELECT two_last.two_last, one_last.one_last, now.now, one_next.one_next, two_next.two_next
